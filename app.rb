@@ -62,29 +62,33 @@ get '/' do
 end
 
 post '/upload' do
-	url = params[:url]
-
-	# We create a local representation of the remote resource
-	local_resource = local_resource_from_url(url)
-
-	# We have a copy of the remote file for processing
-	local_copy_of_remote_file = local_resource.file
-
-	# Do your processing with the local file
-	zipbytes = RestClient.put "https://dockertikatest.herokuapp.com/unpack/all", File.open(local_copy_of_remote_file.path, 'rb').read, :content_type => 'application/pdf'
-
-  images = []
-	Zip::Archive.open_buffer(zipbytes) do |zf|
-
-		zf.each {|f|
-			if f.name.include? 'image'
-        mimetype = MimeMagic.by_path(f.name).type
-        images << {file: f.read, mimetype: mimetype}
-			end
-		}
-	end
-
   stream do |out|
+    # evade Heroku timeout
+    out.puts ""
+    out.flush
+
+    url = params[:url]
+
+    # We create a local representation of the remote resource
+    local_resource = local_resource_from_url(url)
+
+    # We have a copy of the remote file for processing
+    local_copy_of_remote_file = local_resource.file
+
+    # Do your processing with the local file
+    zipbytes = RestClient.put "https://dockertikatest.herokuapp.com/unpack/all", File.open(local_copy_of_remote_file.path, 'rb').read, :content_type => 'application/pdf'
+
+    images = []
+    Zip::Archive.open_buffer(zipbytes) do |zf|
+
+      zf.each {|f|
+        if f.name.include? 'image'
+          mimetype = MimeMagic.by_path(f.name).type
+          images << {file: f.read, mimetype: mimetype}
+        end
+      }
+    end
+
     images.each do |i|
       out.puts RestClient.put("https://dockertikatest.herokuapp.com/tika", i[:file], :content_type => i[:mimetype])
       out.flush
