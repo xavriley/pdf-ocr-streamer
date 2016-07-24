@@ -1,4 +1,3 @@
-require 'pmap'
 require 'sinatra'
 require "sinatra/streaming"
 require 'rest-client'

@@ -12,7 +12,7 @@ GEM
     mimemagic (0.3.1)
     multi_json (1.12.0)
     netrc (0.11.0)
-    pmap (1.1.1)
+    puma (3.4.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -44,7 +44,7 @@ PLATFORMS
 
 DEPENDENCIES
   mimemagic
-  pmap
+  puma
   rest-client
   sinatra
   sinatra-contrib
