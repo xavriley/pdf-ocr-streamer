@@ -89,7 +89,7 @@ post '/upload' do
       }
     end
 
-    images.sort {|x| x[:name] }.each do |i|
+    images.sort {|a, b| a[:name] <=> b[:name] }.each do |i|
       out.puts RestClient.put("https://dockertikatest.herokuapp.com/tika", i[:file], :content_type => i[:mimetype])
       out.flush
     end
