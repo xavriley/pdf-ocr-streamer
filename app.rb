@@ -64,7 +64,8 @@ end
 post '/upload' do
   stream do |out|
     # evade Heroku timeout
-    out.puts ""
+    out.puts "<!-- #{params[:url]} -->\n"
+    out.puts "<pre>"
     out.flush
 
     url = params[:url]
@@ -93,5 +94,7 @@ post '/upload' do
       out.puts RestClient.put("https://dockertikatest.herokuapp.com/tika", i[:file], :content_type => i[:mimetype])
       out.flush
     end
+
+    out.puts "</pre>"
   end
 end
