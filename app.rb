@@ -89,7 +89,7 @@ post '/upload' do
       }
     end
 
-    images.sort {|a, b| a[:name] <=> b[:name] }.each do |i|
+    images.sort_by {|i| i[:name].gsub(/(\d+)/) {|n| sprintf("%05d", n.to_i) } }.each do |i|
       out.puts RestClient.put("https://dockertikatest.herokuapp.com/tika", i[:file], :content_type => i[:mimetype])
       out.flush
     end
