@@ -82,14 +82,14 @@ post '/upload' do
     Zip::Archive.open_buffer(zipbytes) do |zf|
 
       zf.each {|f|
-        if f.name.include? 'image'
-          mimetype = MimeMagic.by_path(f.name).type
-          images << {file: f.read, mimetype: mimetype}
+        mimetype = MimeMagic.by_path(f.name)
+        if mimetype and mimetype.image?
+          images << {name: f.name, file: f.read, mimetype: mimetype}
         end
       }
     end
 
-    images.each do |i|
+    images.sort {|x| x[:name] }.each do |i|
       out.puts RestClient.put("https://dockertikatest.herokuapp.com/tika", i[:file], :content_type => i[:mimetype])
       out.flush
     end
