@@ -53,11 +53,11 @@ get '/' do
   <head><title>Controlling party</title></head>
   <body>
     <form action="/upload" method="post" enctype="multipart/form-data">
-			<input type="text" name="url" />
-      <label for="url" value="Enter the URL of a PDF" />
+      <label for="url">Enter the URL of a PDF</lable>
+			<input type="text" id="url" name="url" />
       <p>OR:</p>
-      <input type="text" name="company" />
-      <label for="company" value="Enter a UK company number or name" />
+      <label for="company">Enter a UK company number</label>
+      <input type="text" id="company" name="company" />
       <input type="submit" />
     </form>
   </body>
